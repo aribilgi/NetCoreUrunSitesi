@@ -13,9 +13,9 @@ namespace Entities
         public string? Email { get; set; }
         [Display(Name = "Telefon"), StringLength(15)]
         public string? Phone { get; set; }
-        [Display(Name = "Kullanıcı Adı"), StringLength(50)]
+        [Display(Name = "Kullanıcı Adı"), StringLength(50), Required(ErrorMessage = "Boş Geçilemez!")]
         public string Username { get; set; }
-        [Display(Name = "Şifre"), StringLength(50)]
+        [Display(Name = "Şifre"), StringLength(50), Required(ErrorMessage = "Boş Geçilemez!")]
         public string Password { get; set; }
         [Display(Name = "Aktif?")]
         public bool IsActive { get; set; }

@@ -1,3 +1,4 @@
+using BL;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer()); // uygulamada sql server kullan
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); // Dependency Injection yöntemiyle projemizde IRepository örneði istenirse Repository classýndan instance alýnýp kullanýma sunulur.
+
+//Diðer Dependency Injection yöntemleri :
+
+// AddSingleton : Uygulama ayaða kalkarken çalýþan ConfigureServices metodunda bu yöntem ile tanýmladýðýmýz her sýnýftan sadece bir örnek oluþturulur. Kim nereden çaðýrýrsa çaðýrsýn kendisine bu örnek gönderilir. Uygulama yeniden baþlayana kadar yenisi üretilmez.
+// AddTransient : Uygulama çalýþma zamanýnda belirli koþullarda üretilir veya varolan örneði kullanýr. 
+// AddScoped : Uygulama çalýþýrken her istek için ayrý ayrý nesne üretilir.
 
 var app = builder.Build();
 
@@ -25,6 +33,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+        name: "admin",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+      );
 
 app.MapControllerRoute(
     name: "default",
