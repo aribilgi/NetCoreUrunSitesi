@@ -1,52 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Entities;
 using BL;
+using NetCoreUrunSitesi.Utils;
 
 namespace NetCoreUrunSitesi.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class AppUsersController : Controller
+    public class BrandsController : Controller
     {
-        //AppUserManager manager = new AppUserManager(); // Klasik kullandığımız yöntem
+        private readonly IRepository<Brand> _repository;
 
-        private readonly IRepository<AppUser> _repository; // DI-Dependency injection yöntemiyle
-
-        public AppUsersController(IRepository<AppUser> repository)
+        public BrandsController(IRepository<Brand> repository)
         {
             _repository = repository;
         }
 
-        // GET: AppUsersController
-        public ActionResult Index()
+        // GET: BrandsController
+        public async Task<ActionResult> IndexAsync()
         {
-            //return View(manager.GetAll()); el klasiko
-            return View(_repository.GetAll());
+            return View(await _repository.GetAllAsync());
         }
 
-        // GET: AppUsersController/Details/5
+        // GET: BrandsController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: AppUsersController/Create
+        // GET: BrandsController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: AppUsersController/Create
+        // POST: BrandsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(AppUser appUser)
+        public async Task<ActionResult> CreateAsync(Brand brand, IFormFile? Logo) // .net core da resim yükleme
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _repository.AddAsync(appUser);
+                    brand.CreateDate = DateTime.Now;
+                    brand.Logo = await FileHelper.FileLoaderAsync(Logo);
+                    await _repository.AddAsync(brand);
                     await _repository.SaveChangesAsync();
-
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -54,26 +53,27 @@ namespace NetCoreUrunSitesi.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-            return View(appUser);
+            return View(brand);
         }
 
-        // GET: AppUsersController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        // GET: BrandsController/Edit/5
+        public async Task<ActionResult> EditAsync(int id)
         {
             return View(await _repository.FindAsync(id));
         }
 
-        // POST: AppUsersController/Edit/5
+        // POST: BrandsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AppUser appUser)
+        public async Task<ActionResult> EditAsync(Brand brand, IFormFile? Logo, bool resmiSil = false)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _repository.Update(appUser);
-
+                    if (resmiSil == true) brand.Logo = string.Empty;
+                    if (Logo != null) brand.Logo = await FileHelper.FileLoaderAsync(Logo);
+                    _repository.Update(brand);
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -81,23 +81,23 @@ namespace NetCoreUrunSitesi.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-            return View(appUser);
+            return View(brand);
         }
 
-        // GET: AppUsersController/Delete/5
-        public async Task<ActionResult> Delete(int id)
+        // GET: BrandsController/Delete/5
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             return View(await _repository.FindAsync(id));
         }
 
-        // POST: AppUsersController/Delete/5
+        // POST: BrandsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, AppUser appUser)
+        public ActionResult Delete(int id, Brand brand)
         {
             try
             {
-                _repository.Delete(appUser);
+                _repository.Delete(brand);
                 return RedirectToAction(nameof(Index));
             }
             catch

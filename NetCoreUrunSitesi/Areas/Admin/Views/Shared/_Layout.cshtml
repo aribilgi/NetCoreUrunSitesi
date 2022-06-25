@@ -8,6 +8,7 @@
     <link href="/dashboard/dashboard.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NetCoreUrunSitesi.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 </head>
 <body>
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -25,19 +26,74 @@
 
     <div class="container-fluid">
         <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/Admin/">
+                                <i class="bi bi-house-door"></i>
+                                Ana Ekran
+                            </a>
+                        </li>
 
-            <main role="main" class="pb-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Brands">
+                                <i class="bi bi-book"></i>
+                                Markalar
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Doktorlar">
+                                <i class="bi bi-hospital"></i>
+                                Doktorlar
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/AppUsers">
+                                <i class="bi bi-people"></i>
+                                Kullanıcılar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Randevular">
+                                <i class="bi bi-calendar-date"></i>
+                                Randevular
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Kullanicilar">
+                                <i class="bi bi-people-fill"></i>
+                                Kullanıcılar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Logs">
+                                <i class="bi bi-collection"></i>
+                                Log Kayıtları
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Contacts">
+                                <i class="bi bi-chat-dots"></i>
+                                İletişim Talepleri
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                
                 @RenderBody()
+
             </main>
         </div>
-
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - NetCoreUrunSitesi - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
