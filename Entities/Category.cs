@@ -9,7 +9,7 @@ namespace Entities
         public string? Name { get; set; }
         [Display(Name = "Açıklama")]
         public string? Description { get; set; }
-        [StringLength(50)]
+        [Display(Name = "Resim"), StringLength(50)]
         public string? Image { get; set; }
         [Display(Name = "Aktif?")]
         public bool IsActive { get; set; }

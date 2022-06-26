@@ -17,6 +17,6 @@ namespace Entities
         public DateTime CreateDate { get; set; }
         [Display(Name = "Sayfa Kategorisi")]
         public int CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
     }
 }
