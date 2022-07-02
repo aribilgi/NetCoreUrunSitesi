@@ -2,11 +2,11 @@
 using Entities;
 using BL;
 using NetCoreUrunSitesi.Utils;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetCoreUrunSitesi.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
     public class NewsController : Controller
     {
         private readonly IRepository<News> _repository;

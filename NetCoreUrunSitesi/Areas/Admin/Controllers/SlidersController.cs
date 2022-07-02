@@ -1,53 +1,51 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BL;
 using Entities;
-using BL;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using NetCoreUrunSitesi.Utils;
 
 namespace NetCoreUrunSitesi.Areas.Admin.Controllers
 {
     [Area("Admin"), Authorize]
-    public class AppUsersController : Controller
+    public class SlidersController : Controller
     {
-        //AppUserManager manager = new AppUserManager(); // Klasik kullandığımız yöntem
+        private readonly IRepository<Slider> _repository;
 
-        private readonly IRepository<AppUser> _repository; // DI-Dependency injection yöntemiyle
-
-        public AppUsersController(IRepository<AppUser> repository)
+        public SlidersController(IRepository<Slider> repository)
         {
             _repository = repository;
         }
 
-        // GET: AppUsersController
-        public ActionResult Index()
+        // GET: SlidersController
+        public async Task<ActionResult> IndexAsync()
         {
-            //return View(manager.GetAll()); el klasiko
-            return View(_repository.GetAll());
+            return View(await _repository.GetAllAsync());
         }
 
-        // GET: AppUsersController/Details/5
+        // GET: SlidersController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: AppUsersController/Create
+        // GET: SlidersController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: AppUsersController/Create
+        // POST: SlidersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(AppUser appUser)
+        public async Task<ActionResult> CreateAsync(Slider slider, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _repository.AddAsync(appUser);
+                    slider.Image = await FileHelper.FileLoaderAsync(Image);
+                    await _repository.AddAsync(slider);
                     await _repository.SaveChangesAsync();
-
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -55,26 +53,27 @@ namespace NetCoreUrunSitesi.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-            return View(appUser);
+            return View(slider);
         }
 
-        // GET: AppUsersController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        // GET: SlidersController/Edit/5
+        public async Task<ActionResult> EditAsync(int id)
         {
             return View(await _repository.FindAsync(id));
         }
 
-        // POST: AppUsersController/Edit/5
+        // POST: SlidersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AppUser appUser)
+        public async Task<ActionResult> EditAsync(Slider slider, IFormFile? Image, bool resmiSil = false)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _repository.Update(appUser);
-
+                    if (resmiSil == true) slider.Image = string.Empty;
+                    if (Image != null) slider.Image = await FileHelper.FileLoaderAsync(Image);
+                    _repository.Update(slider);
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -82,23 +81,23 @@ namespace NetCoreUrunSitesi.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-            return View(appUser);
+            return View(slider);
         }
 
-        // GET: AppUsersController/Delete/5
-        public async Task<ActionResult> Delete(int id)
+        // GET: SlidersController/Delete/5
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             return View(await _repository.FindAsync(id));
         }
 
-        // POST: AppUsersController/Delete/5
+        // POST: SlidersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, AppUser appUser)
+        public ActionResult Delete(int id, Slider slider)
         {
             try
             {
-                _repository.Delete(appUser);
+                _repository.Delete(slider);
                 return RedirectToAction(nameof(Index));
             }
             catch

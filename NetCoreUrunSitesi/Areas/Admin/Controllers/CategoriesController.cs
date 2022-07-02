@@ -3,10 +3,11 @@ using Entities;
 using BL;
 using NetCoreUrunSitesi.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetCoreUrunSitesi.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
     public class CategoriesController : Controller
     {
         private readonly IRepository<Category> _repository;

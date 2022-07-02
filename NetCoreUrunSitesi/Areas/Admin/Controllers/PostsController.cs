@@ -3,10 +3,11 @@ using Entities;
 using BL;
 using NetCoreUrunSitesi.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetCoreUrunSitesi.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
     public class PostsController : Controller
     {
         private readonly IRepository<Post> _repository;

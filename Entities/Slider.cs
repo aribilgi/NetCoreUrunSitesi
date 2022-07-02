@@ -10,7 +10,7 @@ namespace Entities
         [Display(Name = "Açıklama")]
         public string? Description { get; set; }
         [Display(Name = "Resim"), StringLength(100)]
-        public string Image { get; set; }
+        public string? Image { get; set; }
         [Display(Name = "Resim Link"), StringLength(100)]
         public string? Link { get; set; }
     }

@@ -2,10 +2,11 @@
 using Entities;
 using BL;
 using NetCoreUrunSitesi.Utils;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetCoreUrunSitesi.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
     public class BrandsController : Controller
     {
         private readonly IRepository<Brand> _repository;

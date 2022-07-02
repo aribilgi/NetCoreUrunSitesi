@@ -21,7 +21,7 @@ namespace Entities
         public DateTime CreateDate { get; set; }
         [Display(Name = "Ürün Kategorisi")]
         public int CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
         [Display(Name = "Ürün Markası")]
         public int? BrandId { get; set; }
         public virtual Brand? Brand { get; set; }

@@ -43,52 +43,74 @@ namespace NetCoreUrunSitesi.Areas.Admin.Controllers
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Product product, IFormFile? Image)
+        public async Task<ActionResult> CreateAsync(Product product, IFormFile? Image)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    product.CreateDate = DateTime.Now;
+                    product.Image = await FileHelper.FileLoaderAsync(Image);
+                    await _repository.AddAsync(product);
+                    await _repository.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            ViewBag.CategoryId = new SelectList(await _categoryRepository.GetAllAsync(), "Id", "Name");
+            ViewBag.BrandId = new SelectList(await _brandRepository.GetAllAsync(), "Id", "Name");
+            return View(product);
         }
 
         // GET: ProductsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
-            return View();
+            ViewBag.CategoryId = new SelectList(await _categoryRepository.GetAllAsync(), "Id", "Name");
+            ViewBag.BrandId = new SelectList(await _brandRepository.GetAllAsync(), "Id", "Name");
+            return View(await _repository.FindAsync(id));
         }
 
         // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditAsync(Product product, IFormFile? Image, bool resmiSil = false)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (resmiSil == true) product.Image = string.Empty;
+                    if (Image != null) product.Image = await FileHelper.FileLoaderAsync(Image);
+                    _repository.Update(product);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            ViewBag.CategoryId = new SelectList(await _categoryRepository.GetAllAsync(), "Id", "Name");
+            ViewBag.BrandId = new SelectList(await _brandRepository.GetAllAsync(), "Id", "Name");
+            return View(product);
         }
 
         // GET: ProductsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            return View();
+            return View(await _repository.FindAsync(id));
         }
 
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Product product)
         {
             try
             {
+                _repository.Delete(product);
                 return RedirectToAction(nameof(Index));
             }
             catch
