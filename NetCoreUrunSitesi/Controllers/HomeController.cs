@@ -10,11 +10,13 @@ namespace NetCoreUrunSitesi.Controllers
     {
         private readonly IRepository<Slider> _sliderRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<News> _newsRepository;
 
-        public HomeController(IRepository<Slider> sliderRepository, IRepository<Product> productRepository)
+        public HomeController(IRepository<Slider> sliderRepository, IRepository<Product> productRepository, IRepository<News> newsRepository)
         {
             _sliderRepository = sliderRepository;
             _productRepository = productRepository;
+            _newsRepository = newsRepository;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -24,7 +26,8 @@ namespace NetCoreUrunSitesi.Controllers
             var model = new HomePageViewModel()
             {
                 Sliders = _sliderRepository.GetAll(),
-                Products = _productRepository.GetAll()
+                Products = _productRepository.GetAll(),
+                News = _newsRepository.GetAll()
             };
             return View(model);
         }
