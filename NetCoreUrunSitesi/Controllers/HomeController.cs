@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BL;
+using Entities;
+using Microsoft.AspNetCore.Mvc;
 using NetCoreUrunSitesi.Models;
 using System.Diagnostics;
 
@@ -6,16 +8,25 @@ namespace NetCoreUrunSitesi.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IRepository<Slider> _sliderRepository;
+        private readonly IRepository<Product> _productRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IRepository<Slider> sliderRepository, IRepository<Product> productRepository)
         {
-            _logger = logger;
+            _sliderRepository = sliderRepository;
+            _productRepository = productRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            //var sliders = await _sliderRepository.GetAllAsync();
+
+            var model = new HomePageViewModel()
+            {
+                Sliders = _sliderRepository.GetAll(),
+                Products = _productRepository.GetAll()
+            };
+            return View(model);
         }
 
         public IActionResult Privacy()
