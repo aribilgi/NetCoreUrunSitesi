@@ -39,20 +39,9 @@
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-            @foreach (var item in Model.Products)
+            @foreach (var product in Model.Products)
             {
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <a href="#">
-                            <img src="/Img/@item.Image" alt="" class="bd-placeholder-img card-img-top" />
-                            <div class="card-body">
-                                <p class="card-text">
-                                    @item.Name
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                @await Html.PartialAsync("_ProductView", product)
             }
 
         </div>
@@ -66,20 +55,6 @@
     </h2>
     @foreach (var item in Model.News)
     {
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">@item.Name</h3>
-                    <div class="mb-1 text-muted">@item.CreateDate.ToShortDateString()</div>
-                    <p class="card-text mb-auto">
-                        @item.Description
-                    </p>
-                    <a href="#" class="stretched-link">Devamını Oku..</a>
-                </div>
-                <div class="col-auto d-none d-lg-block">
-                    <img src="/Img/@item.Image" alt="" class="bd-placeholder-img" width="200" />
-                </div>
-            </div>
-        </div>
+        @await Html.PartialAsync("_NewsPartial", item)
     }
 </div>
