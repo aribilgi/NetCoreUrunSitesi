@@ -6,12 +6,12 @@ namespace NetCoreUrunSitesi.Services
     {
         private readonly HttpClient _httpClient; // Api işlemleri httpclient nesneleriyle yapılır
 
-        public AppUsersApiService(HttpClient httpClient)
+        public AppUsersApiService(HttpClient httpClient) // Dependency(Bağımlılık)Injection(Enjeksiyonu)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient; // S.O.L.I.D Prensipleri
         }
 
-        public async Task<List<AppUser>> GetAllAppUsers()
+        public async Task<List<AppUser>> GetAllAppUsers() // Geriye AppUser Listesi getiren metot
         {
             return await _httpClient.GetFromJsonAsync<List<AppUser>>("AppUsers"); // Api deki app users controller a get isteği yaptık, oradan dönen json datayı List<AppUser> ile appuser listesine çevirdik ve bu metodun çağrıldığı yere gönderdik
         }
@@ -28,6 +28,18 @@ namespace NetCoreUrunSitesi.Services
         public async Task<AppUser> GetByIdAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<AppUser>($"AppUsers/{id}");
+        }
+
+        public async Task<bool> UpdateAsync(int id, AppUser appUser)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"AppUsers/{id}", appUser);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"AppUsers/{id}");
+            return response.IsSuccessStatusCode;
         }
 
     }
