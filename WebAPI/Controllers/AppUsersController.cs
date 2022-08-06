@@ -48,14 +48,10 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<AppUser>> Put(int id, AppUser appUser) // Güncelleme için Put metodu kullanılır
         {
-            if (id != appUser.Id) // eğer gelen id ile gelen kullanıcının id si eşleşmiyorsa
-            {
-                return BadRequest(); // geçersiz istek hatası dön
-            }
             _repository.Update(appUser);
-            await _repository.SaveChangesAsync();
-
-            return NoContent(); // güncellemenin geri dönüş türü no content
+            var sonuc = await _repository.SaveChangesAsync();
+            if (sonuc > 0) return NoContent(); // güncellemenin geri dönüş türü no content
+            return StatusCode(StatusCodes.Status304NotModified);
         }
 
         // DELETE api/<AppUsersController>/5
@@ -66,7 +62,9 @@ namespace WebAPI.Controllers
             if (appUser == null) return BadRequest();
             _repository.Delete(appUser);
 
-            return NoContent();
+            var sonuc = await _repository.SaveChangesAsync();
+            if (sonuc > 0) return Ok();
+            return StatusCode(StatusCodes.Status304NotModified);
         }
     }
 }

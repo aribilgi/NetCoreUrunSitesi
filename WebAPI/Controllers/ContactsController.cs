@@ -47,8 +47,10 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<Contact>> Put(int id, Contact entity)
         {
             _repository.Update(entity);
-            await _repository.SaveChangesAsync();
-            return NoContent();
+
+            var sonuc = await _repository.SaveChangesAsync();
+            if (sonuc > 0) return NoContent();
+            return StatusCode(StatusCodes.Status304NotModified);
         }
 
         // DELETE api/<ContactsController>/5
@@ -58,7 +60,10 @@ namespace WebAPI.Controllers
             var kayit = await _repository.FindAsync(id);
             if (kayit == null) return BadRequest();
             _repository.Delete(kayit);
-            return NoContent();
+
+            var sonuc = await _repository.SaveChangesAsync();
+            if (sonuc > 0) return Ok();
+            return StatusCode(StatusCodes.Status304NotModified);
         }
     }
 }

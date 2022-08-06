@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Entities;
 
 namespace NetCoreUrunSitesi.Areas.Admin.Controllers
@@ -65,22 +64,22 @@ namespace NetCoreUrunSitesi.Areas.Admin.Controllers
         // POST: APIBrandsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Brand brand)
+        public async Task<ActionResult> EditAsync(int id, Brand entity)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var response = await _httpClient.PutAsJsonAsync($"{_apiAdres}/{id}", brand);
-
-                    return RedirectToAction(nameof(Index));
+                    var response = await _httpClient.PutAsJsonAsync($"{_apiAdres}/{id}", entity);
+                    if (response.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
+                    ModelState.AddModelError("", "Güncelleme Başarısız Oldu!");
                 }
                 catch
                 {
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-            return View(brand);
+            return View(entity);
         }
 
         // GET: APIBrandsController/Delete/5
@@ -92,17 +91,19 @@ namespace NetCoreUrunSitesi.Areas.Admin.Controllers
         // POST: APIBrandsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id, Brand brand)
+        public async Task<ActionResult> DeleteAsync(int id, Brand entity)
         {
             try
             {
-                await _httpClient.DeleteAsync($"{_apiAdres}/{id}");
-                return RedirectToAction(nameof(Index));
+                var response = await _httpClient.DeleteAsync($"{_apiAdres}/{id}");
+                if (response.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("", "Kayıt Güncellenemedi!");
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "Hata Oluştu!");
             }
+            return View(entity);
         }
     }
 }

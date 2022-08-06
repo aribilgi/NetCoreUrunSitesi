@@ -43,8 +43,9 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<Brand>> Put(int id, Brand brand)
         {
             _repository.Update(brand);
-            await _repository.SaveChangesAsync();
-            return NoContent();
+            var sonuc = await _repository.SaveChangesAsync();
+            if (sonuc > 0) return NoContent();
+            return StatusCode(StatusCodes.Status304NotModified);
         }
 
         // DELETE api/<BrandsController>/5
@@ -54,7 +55,10 @@ namespace WebAPI.Controllers
             var kayit = await _repository.FindAsync(id);
             if (kayit == null) return BadRequest();
             _repository.Delete(kayit);
-            return NoContent();
+
+            var sonuc = await _repository.SaveChangesAsync();
+            if (sonuc > 0) return NoContent();
+            return StatusCode(StatusCodes.Status304NotModified);
         }
     }
 }

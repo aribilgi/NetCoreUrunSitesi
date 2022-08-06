@@ -1,11 +1,7 @@
 ﻿using DAL;
 using Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace BL
 {
@@ -32,10 +28,9 @@ namespace BL
             await dbSet.AddAsync(entity); // asemkron metotları kullanırken await anahtar kelimesi kullanılır
         }
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
             dbSet.Remove(entity);
-            return SaveChanges();
         }
 
         public T Find(int id)
@@ -103,10 +98,9 @@ namespace BL
             return await context.SaveChangesAsync();
         }
 
-        public int Update(T entity)
+        public void Update(T entity)
         {
             context.Update(entity);
-            return SaveChanges();
         }
     }
 }
