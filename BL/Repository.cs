@@ -7,15 +7,12 @@ namespace BL
 {
     public class Repository<T> : IRepository<T> where T : class, IEntity, new()
     {
-        DatabaseContext context; // içi boş context nesnesi tanımladık
+        DatabaseContext _context; // içi boş context nesnesi tanımladık
         DbSet<T> dbSet; // içi boş dbSet nesnesi tanımladık
-        public Repository()
+        public Repository(DatabaseContext context)
         {
-            if (context == null)
-            {
-                context = new DatabaseContext(); // uygulama çalışınca context boşsa doldur
-                dbSet = context.Set<T>(); // dbSet nesnesini de oluşturulan context içinde bize gelen classa göre ayarla
-            }
+            _context = context;
+            dbSet = context.Set<T>(); // dbSet nesnesini de oluşturulan context içinde bize gelen classa göre ayarla
         }
         public int Add(T entity)
         {
@@ -40,7 +37,7 @@ namespace BL
 
         public IQueryable<T> FindAllAsync(Expression<Func<T, bool>> expression)
         {
-            throw new NotImplementedException();
+            return dbSet.Where(expression);
         }
 
         public async Task<T> FindAsync(int id)
@@ -85,22 +82,22 @@ namespace BL
 
         public IQueryable<T> GetAllInclude(Expression<Func<T, bool>> expression)
         {
-            throw new NotImplementedException();
+            return dbSet.Where(expression);
         }
 
         public int SaveChanges()
         {
-            return context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
         public void Update(T entity)
         {
-            context.Update(entity);
+            _context.Update(entity);
         }
     }
 }
